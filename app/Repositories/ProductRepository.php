@@ -12,21 +12,23 @@ class ProductRepository
         return Product::orderBy($filterName, 'asc')->get();
     }
 
-    public function create($request){        
+    public function create($request) {        
 
         $image = $request['image'];
         $newImage = time().$image->getClientOriginalName();
-        $image->move('uploads/products/images',$newImage);
+        $image->move('uploads/products/images', $newImage);
 
 
-        Product::create([
+        Product::create(
+            [
             'name' => $request['name'],
             'description' => $request['description'],
             'categorie_id' => $request['categorie_id'],
             'sub_categorie_id' => $request['sub_categorie_id'],
             'price' => $request['price'],
             'image' => 'uploads/products/images/'.$newImage
-        ]);
+            ]
+        );
 
     }
 
@@ -39,10 +41,10 @@ class ProductRepository
     {
         $contains = Str::contains($request['image'], 'uploads/products/images');
         
-        if(!$contains){
+        if(!$contains) {
             $image = $request['image'];
             $newImage = time().$image->getClientOriginalName();
-            $image->move('uploads/products/images',$newImage);            
+            $image->move('uploads/products/images', $newImage);            
             $product->image = 'uploads/products/images/'.$newImage;
         }        
 

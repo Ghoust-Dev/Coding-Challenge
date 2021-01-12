@@ -19,14 +19,16 @@ class ProductController extends Controller
     public function store(Request $request)
     {
 
-        $data = $request->only([
-            'name',
-            'description',
-            'categorie_id',
-            'price',
-            'image',
-            'sub_categorie_id'
-        ]);
+        $data = $request->only(
+            [
+                'name',
+                'description',
+                'categorie_id',
+                'price',
+                'image',
+                'sub_categorie_id'
+            ]
+        );
             
         $result = ['status' => 200];
 
@@ -39,7 +41,7 @@ class ProductController extends Controller
             ] ;
         }
 
-        return response()->json($result,$result['status']);
+        return response()->json($result, $result['status']);
 
     }
 
@@ -56,7 +58,7 @@ class ProductController extends Controller
             ] ;
         }
 
-        return response()->json($result,$result['status']);
+        return response()->json($result, $result['status']);
 
     }
 
@@ -73,25 +75,27 @@ class ProductController extends Controller
             ] ;
         }
 
-        return response()->json($result,$result['status']);
+        return response()->json($result, $result['status']);
 
     }
 
     public function update(Request $request, $id)
     {
-        $data = $request->only([
-            'name',
-            'description',
-            'categorie_id',
-            'price',
-            'image',
-            'sub_categorie_id'
-        ]);
+        $data = $request->only(
+            [
+                'name',
+                'description',
+                'categorie_id',
+                'price',
+                'image',
+                'sub_categorie_id'
+            ]
+        );
             
         $result = ['status' => 200];
 
         try {
-            $result['data'] = $this->productService->updateProduct($data,$id);
+            $result['data'] = $this->productService->updateProduct($data, $id);
         }catch(Exception $e){
             $result = [
                 'status'=> 500,
@@ -99,7 +103,7 @@ class ProductController extends Controller
             ] ;
         }
 
-        return response()->json($result,$result['status']);
+        return response()->json($result, $result['status']);
     }
 
     public function destroy($id)
@@ -115,7 +119,7 @@ class ProductController extends Controller
             ] ;
         }
 
-        return response()->json($result,$result['status']);
+        return response()->json($result, $result['status']);
 
     }
 }

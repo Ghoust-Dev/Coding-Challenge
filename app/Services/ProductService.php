@@ -21,15 +21,16 @@ class ProductService
     public function saveProduct($data)
     {
         
-        $validate = Validator::make($data,[
-            'name' => 'required',
-            'description' => 'required',
-            'categorie_id' => 'required',
-            'price' => 'required',
-            'image' => 'required'
-        ]);        
+        $validate = Validator::make($data, [
+                'name' => 'required',
+                'description' => 'required',
+                'categorie_id' => 'required',
+                'price' => 'required',
+                'image' => 'required'
+            ]
+        );        
 
-        if($validate->fails()){
+        if($validate->fails()) {
             throw new InvalidArgumentException($validate->errors()->first());
         }
 
@@ -53,7 +54,7 @@ class ProductService
     {
         $product = $this->productRepository->find($id);
 
-        $validate = Validator::make($data,[
+        $validate = Validator::make($data, [
             'name' => 'required',
             'description' => 'required',
             'categorie_id' => 'required',
@@ -61,7 +62,7 @@ class ProductService
             'image' => 'required'
         ]);        
 
-        if($validate->fails()){
+        if($validate->fails()) {
             throw new InvalidArgumentException($validate->errors()->first());
         }
 

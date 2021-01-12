@@ -20,12 +20,12 @@ class CategoryService
 
     public function save($request)
     {
-        $validate = Validator::make($request,[
+        $validate = Validator::make($request, [
             'categorie' => 'required'
         ]);
 
 
-        if($validate->fails()){            
+        if($validate->fails()) {            
             throw new InvalidArgumentException($validate->errors()->first());
         }
         
@@ -43,13 +43,14 @@ class CategoryService
 
     public function saveSubCategorie($request)
     {
-        $validate = Validator::make($request,[
+        $validate = Validator::make($request, [
             'sub_categorie' => 'required',
             'cat_parent_id' => 'required'
-        ]);
+            ]
+        );
 
 
-        if($validate->fails()){            
+        if($validate->fails()) {            
             throw new InvalidArgumentException($validate->errors()->first());
         }
         

@@ -20,9 +20,11 @@ class CategorieController extends Controller
     public function store(Request $request)
     {
         
-        $data = $request->only([
-            'categorie'
-        ]);
+        $data = $request->only(
+            [
+                'categorie'
+            ]
+        );
             
         $result = ['status' => 200];
 
@@ -37,7 +39,7 @@ class CategorieController extends Controller
             ] ;
         }
 
-        return response()->json($result,$result['status']);
+        return response()->json($result, $result['status']);
 
     }
 
@@ -54,16 +56,19 @@ class CategorieController extends Controller
             ] ;
         }
 
-        return response()->json($result,$result['status']);
+        return response()->json($result, $result['status']);
 
     }
 
-    public function addSubCategorie(Request $request){
+    public function addSubCategorie(Request $request)
+    {
 
-        $data = $request->only([
-            'sub_categorie',
-            'cat_parent_id'
-        ]);
+        $data = $request->only(
+            [
+                'sub_categorie',
+                'cat_parent_id'
+            ]
+        );
         
         $result = ['status' => 200];
 
@@ -78,10 +83,11 @@ class CategorieController extends Controller
             ] ;
         }
 
-        return response()->json($result,$result['status']);
+        return response()->json($result, $result['status']);
     }
 
-    public function showCategorie($id){
+    public function showCategorie($id)
+    {
 
         $result = ['status' => 200];
 
@@ -94,7 +100,7 @@ class CategorieController extends Controller
             ] ;
         }
 
-        return response()->json($result,$result['status']);
+        return response()->json($result, $result['status']);
         
     }
 
@@ -111,7 +117,7 @@ class CategorieController extends Controller
             ] ;
         }
 
-        return response()->json($result,$result['status']);
+        return response()->json($result, $result['status']);
     }
 
 

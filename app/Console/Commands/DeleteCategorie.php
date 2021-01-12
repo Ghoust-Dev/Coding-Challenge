@@ -11,11 +11,6 @@ class DeleteCategorie extends Command
 
     protected $description = 'Delete Categorie';
 
-   /*  public function __construct()
-    {
-        parent::__construct();
-    } */
-
     public function handle()
     {
         $categorie = Categorie::find($this->argument('id'));

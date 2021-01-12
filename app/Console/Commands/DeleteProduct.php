@@ -11,11 +11,6 @@ class DeleteProduct extends Command
 
     protected $description = 'Delete Product';
 
-   /*  public function __construct()
-    {
-        parent::__construct();
-    } */
-
     public function handle()
     {
         $product = Product::find($this->argument('id'));
