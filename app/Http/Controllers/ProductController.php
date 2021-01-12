@@ -2,111 +2,120 @@
 
 namespace App\Http\Controllers;
 
-use App\Product;
+use App\Services\ProductService;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
-
-
-use function Psy\debug;
 
 class ProductController extends Controller
 {
-    public function index()
+    private $productService;
+
+    public function __construct(ProductService $productService)
     {
-        //
+        $this->productService = $productService;
     }
 
     public function store(Request $request)
     {
-        $validate = Validator::make($request->all(),[
-            'name' => 'required',
-            'description' => 'required',
-            'categorie_id' => 'required',
-            'price' => 'required',
-            'image' => 'required'
-        ]);
 
-        if($validate->fails()){
-            return response()->json(['status'=>false,'error'=>$validate->errors()]);
+        $data = $request->only([
+            'name',
+            'description',
+            'categorie_id',
+            'price',
+            'image',
+            'sub_categorie_id'
+        ]);
+            
+        $result = ['status' => 200];
+
+        try {
+            $result['data'] = $this->productService->saveProduct($data);
+        }catch(Exception $e){
+            $result = [
+                'status'=> 500,
+                'error'=>$e->getMessage()
+            ] ;
         }
 
-        $image = $request->image;
-        $newImage = time().$image->getClientOriginalName();
-        $image->move('uploads/products/images',$newImage);
-
-        
-        Product::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'categorie_id' => $request->categorie_id,
-            'sub_categorie_id' => $request->sub_categorie_id,
-            'price' => $request->price,
-            'image' => 'uploads/products/images/'.$newImage
-        ]);
-
-        return response()->json(['status'=>true,'message'=>'The product has been added']);
+        return response()->json($result,$result['status']);
 
     }
 
-    public function show(Product $product,$filterName)
+    public function show($filterName)
     {
-        $product = Product::orderBy($filterName, 'asc')->get();
+        $result = ['status' => 200];
 
-        return response()->json(['status'=>true,'products'=>$product]);
+        try {
+            $result['data'] = $this->productService->getProductsOrderBy($filterName);
+        }catch(Exception $e){
+            $result = [
+                'status'=> 500,
+                'error'=>$e->getMessage()
+            ] ;
+        }
+
+        return response()->json($result,$result['status']);
+
     }
 
-    public function showProduct($id){
-        $product = Product::find($id);
-        
-        return response()->json(['status'=>true,'product'=>$product]);
-    }
-
-    public function edit(Product $product)
+    public function showProduct($id)
     {
-        //
+        $result = ['status' => 200];
+
+        try {
+            $result['data'] = $this->productService->getProductById($id);
+        }catch(Exception $e){
+            $result = [
+                'status'=> 500,
+                'error'=>$e->getMessage()
+            ] ;
+        }
+
+        return response()->json($result,$result['status']);
+
     }
 
     public function update(Request $request, $id)
     {
-        $product = Product::find($id);
-
-        $validate = Validator::make($request->all(),[
-            'name' => 'required',
-            'description' => 'required',
-            'categorie_id' => 'required',
-            'price' => 'required',
-            'image' => 'required'
+        $data = $request->only([
+            'name',
+            'description',
+            'categorie_id',
+            'price',
+            'image',
+            'sub_categorie_id'
         ]);
+            
+        $result = ['status' => 200];
 
-        if($validate->fails()){
-            return response()->json(['status'=>false,'error'=>$validate->errors()]);
+        try {
+            $result['data'] = $this->productService->updateProduct($data,$id);
+        }catch(Exception $e){
+            $result = [
+                'status'=> 500,
+                'error'=>$e->getMessage()
+            ] ;
         }
 
-        $contains = Str::contains($request->image, 'uploads/products/images');
-        
-        if(!$contains){
-            $image = $request->image;
-            $newImage = time().$image->getClientOriginalName();
-            $image->move('uploads/products/images',$newImage);            
-            $product->image = 'uploads/products/images/'.$newImage;
-        }        
-
-        $product->name = $request->name;
-        $product->description = $request->description;
-        $product->categorie_id = $request->categorie_id;
-        $product->price = $request->price;
-
-        $product->save();
-
-        return response()->json(['status'=>true,'message'=>'The product has been updated']);
+        return response()->json($result,$result['status']);
     }
 
     public function destroy($id)
     {
-        $product = Product::find($id);
-        $product->delete();
+        $result = ['status' => 200];
 
-        return response()->json(['message'=>'The product has been deleted']);
+        try {
+            $result['data'] = $this->productService->deleteProduct($id);
+        }catch(Exception $e){
+            $result = [
+                'status'=> 500,
+                'error'=>$e->getMessage()
+            ] ;
+        }
+
+        return response()->json($result,$result['status']);
+
     }
 }

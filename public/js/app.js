@@ -1987,8 +1987,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2009,54 +2007,51 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   mounted: function mounted() {
-    var _this = this;
-
     getCat: {
-      axios.get("/api/showCategories").then(function (res) {
-        if (res.status) {
-          _this.allCategories = res.data.categories;
-        }
-      });
+      this.getCategories();
     }
   },
   methods: {
     addCategorie: function addCategorie() {
-      var _this2 = this;
+      var _this = this;
 
       var formData = new FormData();
       formData.append('categorie', this.categorie);
       axios.post("".concat(this.publicPath, "/api/addCategorie"), formData).then(function (res) {
-        if (res.data.status) {
-          _this2.success = true;
-          _this2.err = false;
-          _this2.msg = res.data.message;
-        } else {
-          _this2.err = true;
-          _this2.success = false;
-          Object.values(res.data.error).forEach(function (val) {
-            _this2.msgErr = val;
-          });
-        }
+        _this.success = true;
+        _this.err = false;
+        _this.msg = res.data.success;
+
+        _this.getCategories();
+      })["catch"](function (error) {
+        _this.err = true;
+        _this.success = false;
+        _this.msgErr = error.response.data.msgError;
       });
     },
     addSubCategorie: function addSubCategorie() {
-      var _this3 = this;
+      var _this2 = this;
 
       var formData = new FormData();
       formData.append('sub_categorie', this.sub_categorie);
       formData.append('cat_parent_id', this.cat_parent_id);
       axios.post("".concat(this.publicPath, "/api/addSubCategorie"), formData).then(function (res) {
-        if (res.data.status) {
-          _this3.success = true;
-          _this3.err = false;
-          _this3.msg = res.data.message;
-        } else {
-          _this3.err = true;
-          _this3.success = false;
-          Object.values(res.data.error).forEach(function (val) {
-            _this3.msgErr = val;
-          });
-        }
+        _this2.success = true;
+        _this2.err = false;
+        _this2.msg = res.data.success;
+      })["catch"](function (error) {
+        _this2.err = true;
+        _this2.success = false;
+        _this2.msgErr = error.response.data.msgError;
+      });
+    },
+    getCategories: function getCategories() {
+      var _this3 = this;
+
+      axios.get("/api/showCategories").then(function (res) {
+        Object.values(res.data).forEach(function (categories) {
+          _this3.allCategories = categories;
+        });
       });
     },
     onChange: function onChange(event) {
@@ -2077,8 +2072,6 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../routes */ "./resources/js/routes/index.js");
-//
-//
 //
 //
 //
@@ -2175,9 +2168,7 @@ __webpack_require__.r(__webpack_exports__);
 
     getCat: {
       axios.get("/api/showCategories").then(function (res) {
-        if (res.status) {
-          _this.allCategories = res.data.categories;
-        }
+        _this.allCategories = res.data.data;
       });
     }
   },
@@ -2194,15 +2185,11 @@ __webpack_require__.r(__webpack_exports__);
       formData.append('description', this.product.description);
       formData.append('price', this.product.price);
       formData.append('image', this.product.image);
-      axios.post('api/addProduct', formData).then(function (res) {
-        if (res.data.status) {
-          _this2.$router.push('/');
-        } else {
-          _this2.err = true;
-          Object.values(res.data.error).forEach(function (val) {
-            _this2.msgErr = val;
-          });
-        }
+      axios.post('api/addProduct', formData).then(function () {
+        _this2.$router.push('/');
+      })["catch"](function (err) {
+        _this2.err = true;
+        _this2.msgErr = err.response.data.error;
       });
     },
     selectImage: function selectImage(e) {
@@ -2218,10 +2205,8 @@ __webpack_require__.r(__webpack_exports__);
     getSubCat: function getSubCat() {
       var _this3 = this;
 
-      axios.get("/api/showSubCategories/".concat(this.product.categorie_id)).then(function (res) {
-        if (res.status) {
-          _this3.allSubCategories = res.data.subCategories;
-        }
+      axios.get("/api/showSubCategorie/".concat(this.product.categorie_id)).then(function (res) {
+        _this3.allSubCategories = res.data.data;
       });
     }
   }
@@ -2239,8 +2224,6 @@ __webpack_require__.r(__webpack_exports__);
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _routes__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../routes */ "./resources/js/routes/index.js");
-//
-//
 //
 //
 //
@@ -2339,19 +2322,15 @@ __webpack_require__.r(__webpack_exports__);
 
     getP: {
       axios.get("/api/showProduct/".concat(this.id)).then(function (res) {
-        if (res.status) {
-          _this.product = res.data.product;
-        } else {
-          console.log('Error when retreive data');
-        }
+        Object.values(res.data).forEach(function (product) {
+          _this.product = product;
+        });
       });
     }
 
     getCat: {
       axios.get("/api/showCategories").then(function (res) {
-        if (res.status) {
-          _this.allCategories = res.data.categories;
-        }
+        _this.allCategories = res.data.data;
       });
     }
   },
@@ -2369,16 +2348,11 @@ __webpack_require__.r(__webpack_exports__);
       formData.append('price', this.product.price);
       formData.append('image', this.product.image);
       this.id = this.$route.params.id;
-      axios.post("".concat(this.publicPath, "/api/updateProduct/").concat(this.id), formData).then(function (res) {
-        if (res.data.status) {} else {
-          _this2.err = true;
-          Object.values(res.data.error).forEach(function (val) {
-            val.forEach(function (element) {
-              console.log(element);
-            });
-            _this2.msgErr = val;
-          });
-        }
+      axios.post("".concat(this.publicPath, "/api/updateProduct/").concat(this.id), formData).then(function () {
+        _this2.$router.push('/');
+      })["catch"](function (err) {
+        _this2.err = true;
+        _this2.msgErr = err.response.data.error;
       });
     },
     selectImage: function selectImage(e) {
@@ -2395,9 +2369,7 @@ __webpack_require__.r(__webpack_exports__);
       var _this3 = this;
 
       axios.get("/api/showSubCategories/".concat(this.product.categorie_id)).then(function (res) {
-        if (res.status) {
-          _this3.allSubCategories = res.data.subCategories;
-        }
+        _this3.allSubCategories = res.data.subCategories;
       });
     }
   }
@@ -2470,31 +2442,12 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
   props: ['products'],
   data: function data() {
     return {
       id: ''
     };
-  },
-  mounted: function mounted() {
-    getCat: {
-      /*  axios.get(`/api/showCategorie/${this.id}`).then(res => {
-           if(res.status){
-               this.Categorie = res.data.categorie;  
-               this.getSubCat();                      
-           }
-       }) */
-      console.log(this.id);
-    }
-  },
-  methods: {
-    getCategory: function getCategory() {
-      console.log("change it");
-    }
   }
 });
 
@@ -2561,21 +2514,11 @@ __webpack_require__.r(__webpack_exports__);
 
     getP: {
       axios.get("".concat(this.publicPath, "/api/showProduct/").concat(this.id)).then(function (res) {
-        if (res.status) {
-          _this.product = res.data.product;
-        } else {
-          console.log('Error when retreive data');
-        }
-      });
-    }
+        Object.values(res.data).forEach(function (product) {
+          _this.product = product;
+        });
 
-    getCat: {
-      axios.get("/api/showCategorie/".concat(this.id)).then(function (res) {
-        if (res.status) {
-          _this.Categorie = res.data.categorie;
-
-          _this.getSubCat();
-        }
+        _this.getCat();
       });
     }
   },
@@ -2587,15 +2530,28 @@ __webpack_require__.r(__webpack_exports__);
         _this2.$router.push('/');
       });
     },
-    getSubCat: function getSubCat() {
+    getCat: function getCat() {
       var _this3 = this;
 
-      axios.get("/api/showCategorie/".concat(this.product.sub_categorie_id)).then(function (res) {
-        if (res.status) {
-          _this3.subCategorie = res.data.categorie;
-          _this3.SubCatExist = true;
-        }
+      axios.get("/api/showCategorie/".concat(this.product.categorie_id)).then(function (res) {
+        Object.values(res.data).forEach(function (value) {
+          _this3.Categorie = value.name;
+        });
+
+        _this3.getSubCat();
       });
+    },
+    getSubCat: function getSubCat() {
+      var _this4 = this;
+
+      if (this.product.sub_categorie_id != null) {
+        axios.get("/api/showCategorie/".concat(this.product.sub_categorie_id)).then(function (res) {
+          _this4.SubCatExist = true;
+          Object.values(res.data).forEach(function (value) {
+            _this4.subCategorie = value.name;
+          });
+        });
+      }
     }
   }
 });
@@ -2651,11 +2607,9 @@ __webpack_require__.r(__webpack_exports__);
       var _this = this;
 
       axios.get("".concat(this.publicPath, "/api/showProducts/").concat(this.filterName)).then(function (res) {
-        if (res.status) {
-          _this.products = res.data.products;
-        } else {
-          console.log('Error when retreive data');
-        }
+        Object.values(res.data).forEach(function (products) {
+          _this.products = products;
+        });
       });
     },
     filterProducts: function filterProducts(e) {
@@ -39234,18 +39188,11 @@ var render = function() {
         : _vm._e(),
       _vm._v(" "),
       _vm.err
-        ? _c(
-            "div",
-            { staticClass: "alert alert-warning" },
-            _vm._l(_vm.msgErr, function(msgList, index) {
-              return _c("li", { key: index }, [
-                _vm._v(
-                  "\n                " + _vm._s(msgList) + "\n            "
-                )
-              ])
-            }),
-            0
-          )
+        ? _c("div", { staticClass: "alert alert-warning" }, [
+            _vm._v(
+              "\n            " + _vm._s(_vm.msgErr) + "           \n        "
+            )
+          ])
         : _vm._e(),
       _vm._v(" "),
       _c("div", { staticClass: "wrapper-items" }, [
@@ -39413,16 +39360,9 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container addProduct" }, [
     _vm.err
-      ? _c(
-          "div",
-          { staticClass: "alert alert-danger" },
-          _vm._l(_vm.msgErr, function(msgList, index) {
-            return _c("li", { key: index }, [
-              _vm._v("\n            " + _vm._s(msgList) + "\n        ")
-            ])
-          }),
-          0
-        )
+      ? _c("div", { staticClass: "alert alert-danger" }, [
+          _vm._v("\n        " + _vm._s(_vm.msgErr) + "            \n    ")
+        ])
       : _vm._e(),
     _vm._v(" "),
     _c(
@@ -39695,16 +39635,9 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _c("div", { staticClass: "container addProduct" }, [
     _vm.err
-      ? _c(
-          "div",
-          { staticClass: "alert alert-danger" },
-          _vm._l(_vm.msgErr, function(msgList, index) {
-            return _c("li", { key: index }, [
-              _vm._v("\n            " + _vm._s(msgList) + "\n        ")
-            ])
-          }),
-          0
-        )
+      ? _c("div", { staticClass: "alert alert-danger" }, [
+          _vm._v("\n        " + _vm._s(_vm.msgErr) + "           \n    ")
+        ])
       : _vm._e(),
     _vm._v(" "),
     _c(
@@ -40159,12 +40092,12 @@ var render = function() {
       _vm._v(" "),
       _c("div", { staticClass: "categories-list" }, [
         _c("span", [
-          _c("strong", [_vm._v(_vm._s(_vm.Categorie.name))]),
+          _c("strong", [_vm._v(_vm._s(_vm.Categorie))]),
           _vm._v(" > ")
         ]),
         _vm._v(" "),
         _vm.SubCatExist
-          ? _c("span", [_vm._v(_vm._s(_vm.subCategorie.name) + " > ")])
+          ? _c("span", [_vm._v(_vm._s(_vm.subCategorie) + " > ")])
           : _vm._e()
       ]),
       _vm._v(" "),

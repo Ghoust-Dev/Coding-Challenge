@@ -10,8 +10,8 @@
                 </span>
             </div>
             <div class="categories-list">
-                <span><strong>{{Categorie.name}}</strong> > </span>
-                <span v-if="SubCatExist">{{subCategorie.name}} > </span>
+                <span><strong>{{Categorie}}</strong> > </span>
+                <span v-if="SubCatExist">{{subCategorie}} > </span>
             </div>
             <div class="head-product">
                 <div class="">
@@ -49,22 +49,12 @@ export default {
     mounted() {
         getP:{
             axios.get(`${this.publicPath}/api/showProduct/${this.id}`).then(res => {
-                if(res.status){
-                    this.product = res.data.product;
-                }else {
-                    console.log('Error when retreive data')
-                }
+                Object.values(res.data).forEach(product =>{
+                    this.product = product;
+                })
+                this.getCat();
             })
-        }
-
-        getCat: {
-            axios.get(`/api/showCategorie/${this.id}`).then(res => {
-                if(res.status){
-                    this.Categorie = res.data.categorie;  
-                    this.getSubCat();                      
-                }
-            })
-        }
+        }        
         
     },
     methods:{
@@ -74,13 +64,27 @@ export default {
             })
         },
 
-        getSubCat() {
-            axios.get(`/api/showCategorie/${this.product.sub_categorie_id}`).then(res => {
-                if(res.status){
-                    this.subCategorie = res.data.categorie;                      
-                    this.SubCatExist = true;                      
-                }
+        getCat() {
+            axios.get(`/api/showCategorie/${this.product.categorie_id}`).then(res => {
+                Object.values(res.data).forEach(value =>{
+                    this.Categorie = value.name;
+                })                  
+                this.getSubCat();
             })
+        },
+
+        getSubCat() {
+            if(this.product.sub_categorie_id != null){
+                axios.get(`/api/showCategorie/${this.product.sub_categorie_id}`).then(res => {
+                    
+                    this.SubCatExist = true; 
+                    Object.values(res.data).forEach(value =>{ 
+                        this.subCategorie = value.name;
+                    }) 
+                                
+                })
+            }
+            
         }
     }
 }

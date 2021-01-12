@@ -14,9 +14,6 @@
                         <div class="name-product">
                             <router-link :to="{name:'product', params:{ id:value.id}}" v-model="id">{{value.name}}</router-link>                    
                         </div>
-                    <!--  <div class="name-product">
-                            <p>{{value.name}}</p>                    
-                        </div> -->
                         <div class="price-product">Price : {{value.price}}</div>
                     </div>
                 </div>
@@ -34,23 +31,7 @@ export default {
         return {
             id:''
         }
-    },
-    mounted() {
-        getCat: {
-           /*  axios.get(`/api/showCategorie/${this.id}`).then(res => {
-                if(res.status){
-                    this.Categorie = res.data.categorie;  
-                    this.getSubCat();                      
-                }
-            }) */
-            console.log(this.id);
-        }
-    },
-    methods: {
-        getCategory(){
-            console.log("change it");
-        }
-    },
+    }
 }
 </script>
 

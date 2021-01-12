@@ -28,7 +28,7 @@ Route::get('deleteProduct/{id}', 'ProductController@destroy');
 Route::post('addCategorie', 'CategorieController@store');
 Route::get('showCategories', 'CategorieController@show');
 Route::post('addSubCategorie', 'CategorieController@addSubCategorie');
-Route::get('showSubCategories/{id}', 'CategorieController@showSubCategories');
+Route::get('showSubCategorie/{id}', 'CategorieController@showSubCategorie');
 Route::get('showCategorie/{id}', 'CategorieController@showCategorie');
 
 

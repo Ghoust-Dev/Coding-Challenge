@@ -37,11 +37,9 @@ export default {
     methods: {
         browsProducts(){
             axios.get(`${this.publicPath}/api/showProducts/${this.filterName}`).then(res => {
-                if(res.status){
-                    this.products = res.data.products;
-                }else {
-                    console.log('Error when retreive data')
-                }
+                Object.values(res.data).forEach(products =>{
+                    this.products = products;
+                })
             })
         },
         filterProducts(e){

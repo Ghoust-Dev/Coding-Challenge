@@ -9,4 +9,6 @@ class Categorie extends Model
     protected $fillable = [
         'name', 'parent_cat_id'
     ];
+
+    protected $guarded = [];
 }

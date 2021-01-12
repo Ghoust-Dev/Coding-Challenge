@@ -5,9 +5,7 @@
                 {{msg}}
             </div>
             <div class="alert alert-warning" v-if="err" >
-                <li v-for="(msgList, index) in msgErr" :key="index">
-                    {{msgList}}
-                </li>            
+                {{msgErr}}           
             </div>
             <div class="wrapper-items">
                 <div class="add_categorie">
@@ -75,12 +73,7 @@ export default {
     },
     mounted() {
         getCat: {
-            axios.get(`/api/showCategories`).then(res => {
-                if(res.status){
-                    this.allCategories = res.data.categories;
-                    
-                }
-            })
+            this.getCategories();
         }
     },
     methods: {
@@ -89,19 +82,17 @@ export default {
             let formData = new FormData();
             formData.append('categorie', this.categorie);
 
-            axios.post(`${this.publicPath}/api/addCategorie`,formData).then(res => {
-                if(res.data.status){
+            axios.post(`${this.publicPath}/api/addCategorie`,formData)
+                .then(res => {      
                     this.success = true;
                     this.err = false;
-                    this.msg = res.data.message;
-                }else {
+                    this.msg = res.data.success;
+                    this.getCategories();
+                }).catch(error => {
                     this.err = true;
                     this.success = false;
-                    Object.values(res.data.error).forEach(val =>{
-                        this.msgErr = val; 
-                    });                         
-                }
-            })
+                    this.msgErr = error.response.data.msgError;                    
+                })
 
             
         },
@@ -111,18 +102,22 @@ export default {
             formData.append('sub_categorie', this.sub_categorie);
             formData.append('cat_parent_id', this.cat_parent_id);
 
-            axios.post(`${this.publicPath}/api/addSubCategorie`,formData).then(res => {
-                if(res.data.status){
+            axios.post(`${this.publicPath}/api/addSubCategorie`,formData)
+                .then(res => {
                     this.success = true;
                     this.err = false;
-                    this.msg = res.data.message;
-                }else{
+                    this.msg = res.data.success;
+                }).catch(error => {
                     this.err = true;
                     this.success = false;
-                    Object.values(res.data.error).forEach(val =>{                        
-                        this.msgErr = val; 
-                    });                         
-                }
+                    this.msgErr = error.response.data.msgError;                    
+                })
+        },
+        getCategories(){
+            axios.get(`/api/showCategories`).then(res => {
+                Object.values(res.data).forEach(categories =>{
+                    this.allCategories = categories;
+                })
             })
         },
         onChange(event){

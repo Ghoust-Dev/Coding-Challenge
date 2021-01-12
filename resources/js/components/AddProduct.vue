@@ -1,9 +1,7 @@
 <template>
     <div class="container addProduct">
         <div class="alert alert-danger" v-if="err" >
-            <li v-for="(msgList, index) in msgErr" :key="index">
-                {{msgList}}
-            </li>            
+            {{msgErr}}            
         </div>
         <form @submit="submitForm" enctype="multipart/form-data">
             <div class="form-group row">
@@ -97,9 +95,7 @@ import router from '../routes';
         mounted() {
             getCat: {
                 axios.get(`/api/showCategories`).then(res => {
-                    if(res.status){
-                        this.allCategories = res.data.categories;                        
-                    }
+                    this.allCategories = res.data.data;
                 })
             }
         },
@@ -118,16 +114,13 @@ import router from '../routes';
                 formData.append('price', this.product.price);
                 formData.append('image', this.product.image);
 
-                axios.post('api/addProduct',formData).then(res => {
-                    if(res.data.status){
+                axios.post('api/addProduct',formData)
+                    .then(() => {
                         this.$router.push('/');
-                    }else{
+                    }).catch(err => {
                         this.err = true;
-                        Object.values(res.data.error).forEach(val =>{    
-                            this.msgErr = val; 
-                        });                         
-                    }
-                })
+                        this.msgErr = err.response.data.error;
+                    })
             },
 
             selectImage(e) {
@@ -144,10 +137,8 @@ import router from '../routes';
             },
 
             getSubCat() {
-                axios.get(`/api/showSubCategories/${this.product.categorie_id}`).then(res => {
-                    if(res.status){
-                        this.allSubCategories = res.data.subCategories;
-                    }
+                axios.get(`/api/showSubCategorie/${this.product.categorie_id}`).then(res => {
+                    this.allSubCategories = res.data.data;
                 })
             }
         }
