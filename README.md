@@ -14,7 +14,9 @@ I used 2 controllers 'ProductController' and 'CategorieController' to manipulate
 
 ###### Create product
 
+```sh
 $ php artisan create:product {name} {description} {price} {image} {categorie_id} {sub_categorie_id?}
+```
 
 * {name} : the name of product.
 * {description} : the description of product.
@@ -25,20 +27,26 @@ $ php artisan create:product {name} {description} {price} {image} {categorie_id}
 
 ###### Delete product
 
+```sh
 $ php artisan delete:product {id}
+```
 
 * {id} : the id of the product you need to deleted.
 
 ###### Create Categorie
 
+```sh
 $ php artisan create:categorie {name} {parent_categorie_id?}
+```
 
 * {name} : the name of categorie.
 * {parent_categorie_id?} : the id of the parent categorie is optional.
 
 ###### Delete product
 
+```sh
 $ php artisan delete:categorie {id}
+```
 
 * {id} : the id of the categorie you need to deleted.
 
